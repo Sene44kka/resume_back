@@ -1,0 +1,10 @@
+rootProject.name = 'resume_back'
+
+//Модули
+//includeProject('base_module', 'modules/base_module')
+//includeProject('security', 'modules/security')
+
+void includeProject(String name, String path) {
+    include ":$name"
+    project(":$name").projectDir = new File(settingsDir, path)
+}
