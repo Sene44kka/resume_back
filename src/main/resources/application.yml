@@ -1,0 +1,47 @@
+server.port: 8080
+
+spring:
+  application:
+    name: resume_back
+
+  profiles:
+    active: dev
+
+  #database
+  datasource:
+    url: jdbc:postgresql://localhost:5432/my_resume?useUnicode=true&characterEncoding=UTF-8
+    username: my_resume_admin
+    password: my_resume_admin
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: false #Включаем sql отладку
+    properties:
+      hibernate:
+        format_sql: true
+  #liquibase settings
+  liquibase:
+    change-log: classpath:db/changelog/changelog.xml
+    enabled: true
+
+  docker:
+    compose:
+      #Выключить запуск в докере
+      enabled: false
+
+#sql debugging
+logging:
+  config: classpath:log4j2-spring.xml
+  level:
+    liquibase: INFO
+    # Уровень логирования
+    root: INFO
+    ru:
+      skripov: INFO
+    # Вывод исключений
+    org:
+      springframework: WARN
+      hibernate: ERROR
