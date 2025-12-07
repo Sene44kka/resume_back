@@ -2,8 +2,8 @@
 <Configuration status="WARN" monitorInterval="30">
     <Properties>
         <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
-        <Property name="LOG_PATH" value="/var/log/taro_bot"/>
-        <Property name="LOG_FILE" value="taro_bot"/>
+        <Property name="LOG_PATH" value="/var/log/my_resume"/>
+        <Property name="LOG_FILE" value="my_resume"/>
     </Properties>
 
     <Appenders>

@@ -39,9 +39,10 @@ logging:
     liquibase: INFO
     # Уровень логирования
     root: INFO
-    ru:
-      skripov: INFO
+    ru.skripov: INFO
     # Вывод исключений
     org:
       springframework: WARN
-      hibernate: ERROR
+      hibernate: INFO
+      org.hibernate.SQL: DEBUG
+      org.hibernate.type.descriptor.sql: TRACE
