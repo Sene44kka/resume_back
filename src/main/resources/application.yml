@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/my_resume?useUnicode=true&characterEncoding=UTF-8
     username: my_resume_admin
-    password: ${PASS}
+    password: my_resume_admin
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
