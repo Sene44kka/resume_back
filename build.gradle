@@ -1,11 +1,11 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '4.0.0'
-    id 'io.spring.dependency-management' version '1.1.7'
+    alias(libs.plugins.java)
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
 }
 
 group = 'ru.skripov'
-version = '0.0.1'
+version = '1.0.0'
 description = 'resume_back'
 
 java {
@@ -28,32 +28,28 @@ repositories {
 }
 
 ext {
-    set('springModulithVersion', "2.0.0")
+    set('springModulithVersion', libs.versions.spring.modulith.get())
 }
 
 dependencies {
+    implementation libs.bundles.spring.web
+
     implementation 'org.springframework.boot:spring-boot-h2console'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-restclient'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
     developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 
     //database
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'org.postgresql:postgresql'
-    implementation 'org.liquibase:liquibase-core'
+    implementation libs.bundles.spring.data
+    implementation libs.bundles.database
 
     //lombok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly libs.bundles.lombok.set
+    annotationProcessor libs.bundles.lombok.set
 
     //Логирование
-    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl'
-    implementation 'org.apache.logging.log4j:log4j-core'
+    implementation libs.bundles.logging
 
     //kafka
     implementation 'org.springframework.kafka:spring-kafka'
@@ -61,16 +57,12 @@ dependencies {
     //modules
     implementation project(':security')
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    //tests
+    testImplementation libs.bundles.testing
+    testImplementation libs.spring.modulith.starter.test
+
     testImplementation 'org.springframework.boot:spring-boot-starter-restclient-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-    testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
-
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    //H2 base
-    testImplementation 'com.h2database:h2'
 }
 
 dependencyManagement {

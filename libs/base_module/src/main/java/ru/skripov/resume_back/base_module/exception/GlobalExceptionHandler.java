@@ -5,10 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.skripov.resume_back.base_module.exception.form.FormErrorResponse;
-import ru.skripov.resume_back.base_module.exception.form.FormException;
-
-import javax.security.sasl.AuthenticationException;
 
 @ControllerAdvice
 @Log4j2

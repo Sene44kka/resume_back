@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    alias(libs.plugins.java)
 }
 
 group = 'ru.skripov'
@@ -22,16 +22,18 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation libs.bundles.spring.web
+    implementation libs.bundles.spring.data
+
     implementation 'org.springframework.boot:spring-boot-autoconfigure'
     implementation 'org.springframework.boot:spring-boot-starter'
-    implementation("io.jsonwebtoken:jjwt:0.12.6")
+    implementation 'org.entur.jwt-rs:jwt-client-spring-core:5.2.2'
+
+    //JWT
+    implementation libs.bundles.jwt
 
     //Логирование
-    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl'
-    implementation 'org.apache.logging.log4j:log4j-core'
+    implementation libs.bundles.logging
 
     //swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'

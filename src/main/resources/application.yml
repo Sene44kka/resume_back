@@ -8,8 +8,10 @@ spring:
     active: dev
   datasource:
     url: jdbc:postgresql://localhost:5432/my_resume?useUnicode=true&characterEncoding=UTF-8
-    username: my_resume_admin
-    password: my_resume_admin
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+#    username: my_resume_admin
+#    password: my_resume_admin
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -27,6 +29,29 @@ spring:
     compose:
       #Выключить запуск в докере
       enabled: false
+
+#JWT Settings
+#jwt:
+#  secret: your-256-bit-secret-must-be-at-least-32-chars-long
+#  expiration: 86400
+
+jwt:
+  # Секрет в base64 (минимум 32 символа)
+  secret: ${JWT_SECRET:U3VwZXJTZWNyZXRLZXlBdGxlYXN0MzJDaGFyYWN0ZXJzTG9uZw==}
+
+  # Время жизни в секундах
+  access-token-expiration: 900        # 15 минут
+  refresh-token-expiration: 604800    # 7 дней
+
+  # Дополнительные настройки
+  issuer: resume-back-app
+  audience: resume-back-users
+
+  # Настройки безопасности
+  header: Authorization
+  prefix: "Bearer "
+  cookie-name: jwt_token
+
 
 #sql debugging
 logging:
