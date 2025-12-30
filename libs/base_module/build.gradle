@@ -22,22 +22,22 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation libs.bundles.spring.web
 
     //Рефлексия
-    implementation 'org.reflections:reflections'
+    implementation libs.reflections
 
     //Логирование
-    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl'
-    implementation 'org.apache.logging.log4j:log4j-core'
+    implementation libs.bundles.logging
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    //Для работы MapStruct + Lombok
+    implementation libs.bundles.mapstruct
+    compileOnly libs.bundles.lombok.mapstruct.compile
+    annotationProcessor libs.bundles.lombok.mapstruct.processor
 
     //swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+    implementation libs.bundles.swagger
 
     // HTTP клиент
-    implementation 'com.squareup.okhttp3:okhttp'
+    implementation libs.okhttp
 }

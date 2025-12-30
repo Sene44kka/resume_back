@@ -34,35 +34,33 @@ ext {
 dependencies {
     implementation libs.bundles.spring.web
 
-    implementation 'org.springframework.boot:spring-boot-h2console'
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-restclient'
-    implementation 'org.springframework.boot:spring-boot-configuration-processor'
-    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+    //dev utils
+    developmentOnly libs.spring.boot.configuration.processor
+    annotationProcessor libs.spring.boot.configuration.processor
 
     //database
     implementation libs.bundles.spring.data
     implementation libs.bundles.database
 
-    //lombok
-    compileOnly libs.bundles.lombok.set
-    annotationProcessor libs.bundles.lombok.set
+    //Для работы MapStruct + Lombok
+    implementation libs.bundles.mapstruct
+    compileOnly libs.bundles.lombok.mapstruct.compile
+    annotationProcessor libs.bundles.lombok.mapstruct.processor
 
     //Логирование
     implementation libs.bundles.logging
 
     //kafka
-    implementation 'org.springframework.kafka:spring-kafka'
+    implementation libs.spring.kafka
+
+    //docker
+    developmentOnly libs.bundles.docker
 
     //modules
     implementation project(':security')
 
     //tests
     testImplementation libs.bundles.testing
-    testImplementation libs.spring.modulith.starter.test
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-restclient-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 }
 
 dependencyManagement {

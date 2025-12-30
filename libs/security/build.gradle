@@ -23,11 +23,10 @@ repositories {
 
 dependencies {
     implementation libs.bundles.spring.web
-    implementation libs.bundles.spring.data
 
-    implementation 'org.springframework.boot:spring-boot-autoconfigure'
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.entur.jwt-rs:jwt-client-spring-core:5.2.2'
+    //database
+    implementation libs.bundles.spring.data
+    implementation libs.bundles.database
 
     //JWT
     implementation libs.bundles.jwt
@@ -36,19 +35,15 @@ dependencies {
     implementation libs.bundles.logging
 
     //swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+    implementation libs.springdoc.openapi.starter.webmvc.ui
 
-    //mapper
-    implementation "org.mapstruct:mapstruct"
-    annotationProcessor "org.mapstruct:mapstruct-processor"
-    //Lombok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
     //Для работы MapStruct + Lombok
-    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding'
+    implementation libs.bundles.mapstruct
+    compileOnly libs.bundles.lombok.mapstruct.compile
+    annotationProcessor libs.bundles.lombok.mapstruct.processor
 
     //modules
     implementation project(':base_module')
 
-    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation libs.bundles.testing
 }
