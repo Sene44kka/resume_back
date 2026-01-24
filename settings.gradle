@@ -1,8 +1,8 @@
 rootProject.name = 'resume_back'
 
 //Модули
-//includeProject('base_module', 'modules/base_module')
-//includeProject('security', 'modules/security')
+includeProject('base_module', 'libs/base_module')
+includeProject('security', 'libs/security')
 
 void includeProject(String name, String path) {
     include ":$name"

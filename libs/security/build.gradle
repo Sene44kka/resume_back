@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+}
+
+group = 'ru.skripov'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+configurations {
+    configureEach {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation("io.jsonwebtoken:jjwt:0.12.6")
+
+    //Логирование
+    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl'
+    implementation 'org.apache.logging.log4j:log4j-core'
+
+    //swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+
+    //mapper
+    implementation "org.mapstruct:mapstruct"
+    annotationProcessor "org.mapstruct:mapstruct-processor"
+    //Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    //Для работы MapStruct + Lombok
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding'
+
+    //modules
+    implementation project(':base_module')
+
+    testImplementation 'org.springframework.security:spring-security-test'
+}

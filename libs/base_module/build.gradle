@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+}
+
+group = 'ru.skripov'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+configurations {
+    configureEach {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    //Рефлексия
+    implementation 'org.reflections:reflections'
+
+    //Логирование
+    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl'
+    implementation 'org.apache.logging.log4j:log4j-core'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    //swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+
+    // HTTP клиент
+    implementation 'com.squareup.okhttp3:okhttp'
+}
