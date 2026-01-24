@@ -62,6 +62,9 @@ logging:
     # Уровень логирования
     root: INFO
     ru.skripov: INFO
+    org.apache.tomcat: INFO
+    org.springframework.boot.web.embedded.tomcat: INFO
+    org.apache.catalina: INFO
     # Вывод исключений
     org:
       springframework: WARN

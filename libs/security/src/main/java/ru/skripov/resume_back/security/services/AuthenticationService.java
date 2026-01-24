@@ -26,14 +26,15 @@ public class AuthenticationService {
 
     private final UserService userService;
     private final TokenService tokenService;
+    private final RegistrationService registrationService;
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
 
-    @Autowired
-    private AuthenticationService(UserService userService, TokenService tokenService,
+    public AuthenticationService(UserService userService, TokenService tokenService, RegistrationService registrationService,
                                   AuthenticationManager authenticationManager, UserMapper userMapper) {
         this.userService = userService;
         this.tokenService = tokenService;
+        this.registrationService = registrationService;
         this.authenticationManager = authenticationManager;
         this.userMapper = userMapper;
     }
@@ -92,7 +93,7 @@ public class AuthenticationService {
 
     public UserDto doRegister(RegistrationRequestDto registrationRequestDto) {
         try {
-            User user = userService.registerUser(registrationRequestDto);
+            User user = registrationService.registerUser(registrationRequestDto);
 
             return Optional.ofNullable(user)
                     .map(userMapper::toDto)
