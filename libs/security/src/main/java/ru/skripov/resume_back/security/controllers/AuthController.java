@@ -8,16 +8,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
-import ru.skripov.resume_back.base_module.exception.ErrorResponse;
 import ru.skripov.resume_back.security.dto.UserDto;
 import ru.skripov.resume_back.security.dto.auth.StateDto;
 import ru.skripov.resume_back.security.dto.auth.login.LoginRequestDto;
@@ -25,8 +22,6 @@ import ru.skripov.resume_back.security.dto.auth.login.LoginResponseDto;
 import ru.skripov.resume_back.security.dto.auth.login.RefreshTokenRequestDto;
 import ru.skripov.resume_back.security.dto.auth.registration.RegistrationRequestDto;
 import ru.skripov.resume_back.security.services.AuthenticationService;
-
-import javax.security.sasl.AuthenticationException;
 
 @Slf4j
 @RestController

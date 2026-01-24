@@ -7,17 +7,16 @@
     </Properties>
 
     <Appenders>
-        <!-- Console appender для dev профиля -->
-        <Console name="Console" target="SYSTEM_OUT" condition='equalsIgnoreCase("${spring.profiles.active}","dev")'>
-            <PatternLayout pattern="${LOG_PATTERN}"/>
+        <!-- Console appender с UTF-8 кодировкой -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8"/>
         </Console>
 
-        <!-- File appender для prod -->
+        <!-- File appender с UTF-8 кодировкой -->
         <RollingFile name="File"
                      fileName="${LOG_PATH}/${LOG_FILE}.log"
-                     filePattern="${LOG_PATH}/${LOG_FILE}-%d{yyyy-MM-dd}.log"
-                     condition='equalsIgnoreCase("${spring.profiles.active}","prod")'>
-            <PatternLayout pattern="${LOG_PATTERN}"/>
+                     filePattern="${LOG_PATH}/${LOG_FILE}-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8"/>
             <Policies>
                 <!-- Ротация каждый день в полночь -->
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
@@ -34,8 +33,8 @@
 
     <Loggers>
         <Root level="info">
-            <AppenderRef ref="Console" condition='equalsIgnoreCase("${spring.profiles.active}","dev")'/>
-            <AppenderRef ref="File" condition='equalsIgnoreCase("${spring.profiles.active}","prod")'/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
         </Root>
     </Loggers>
 </Configuration>

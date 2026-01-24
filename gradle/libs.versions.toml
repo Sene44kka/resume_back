@@ -1,6 +1,6 @@
 [versions]
 # Spring
-spring-boot = "4.0.0"
+spring-boot = "4.1.0-M1"
 spring-modulith = "2.0.0"
 spring-security-test = "7.0.2"
 
@@ -11,7 +11,6 @@ jwt-client = "5.2.2"
 # Database
 postgresql = "42.7.8"
 h2 = "2.4.240"
-liquibase = "5.0.1"
 
 # Utilities
 lombok = "1.18.42"
@@ -58,7 +57,7 @@ jwt-client = { module = "org.entur.jwt-rs:jwt-client-spring-core", version.ref =
 # Database
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
-liquibase-core = { module = "org.liquibase:liquibase-core", version.ref = "liquibase" }
+spring-boot-liquibase = { module = "org.springframework.boot:spring-boot-liquibase", version.ref = "spring-boot" }
 
 # Utilities
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
@@ -113,7 +112,7 @@ jwt = [
 
 database = [
     "postgresql",
-    "liquibase-core"
+    "spring-boot-liquibase"
 ]
 
 logging = [

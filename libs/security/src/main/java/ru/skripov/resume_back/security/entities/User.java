@@ -38,7 +38,7 @@ public class User implements UserDetails {
     @Column(name = "middle_name", nullable = true)
     private String middleName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "date_of_birth")
