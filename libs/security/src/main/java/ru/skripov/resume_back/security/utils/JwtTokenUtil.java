@@ -22,6 +22,12 @@ public class JwtTokenUtil {
     @Value("${jwt.expiration}")
     private Long expiration;
 
+    @Value("${jwt.expiration}")
+    private Long accessTokenExpiration;
+
+    @Value("${jwt.expiration}")
+    private Long refreshTokenExpiration;
+
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
@@ -37,6 +43,15 @@ public class JwtTokenUtil {
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration * 1000))
+                .signWith(getSigningKey(), Jwts.SIG.HS256)
+                .compact();
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return Jwts.builder()
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expiration * 1000 * 24 * 7)) // 7 дней
                 .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
     }
@@ -85,14 +100,5 @@ public class JwtTokenUtil {
 
     public Map<String, Object> extractAllClaimsAsMap(String token) {
         return extractAllClaims(token);
-    }
-
-    public String generateRefreshToken(UserDetails userDetails) {
-        return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiration * 1000 * 24 * 7)) // 7 дней
-                .signWith(getSigningKey(), Jwts.SIG.HS256)
-                .compact();
     }
 }

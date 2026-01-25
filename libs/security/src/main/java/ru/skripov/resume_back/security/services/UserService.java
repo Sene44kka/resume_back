@@ -18,25 +18,20 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    public User findByLogin(String login) {
-        return userRepository.findByLogin(login)
+    public User findByEmail(String login) {
+        return userRepository.findByEmail(login)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public User findByLoginAndPassword(String login, String password) {
-        User user = userRepository.findUserByLoginAndPassword(login, password);
-
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
-
-        return user;
+    public User findByEmailAndPassword(String email, String password) {
+        return userRepository.findUserByEmailAndPassword(email, password)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Override
     @NonNull
-    public UserDetails loadUserByUsername(@NonNull String login) throws UsernameNotFoundException {
-        return userRepository.findByLogin(login)
+    public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

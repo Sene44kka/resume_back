@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,21 +54,18 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Некорректный запрос")
     })
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(
+    public ResponseEntity<@NonNull LoginResponseDto> login(
             @Valid @RequestBody LoginRequestDto loginRequest,
             HttpServletResponse response) {
 
-        log.info("Login attempt for user: {}", loginRequest.getLogin());
+        log.info("Попытка авторизации для пользователя: {}", loginRequest.getLogin());
 
         LoginResponseDto loginResponse = authenticationService.login(loginRequest);
 
-        // Устанавливаем access token в cookie (опционально)
         setAuthCookie(response, loginResponse.getAccessToken(), accessTokenExpiration);
-
-        // Можно также установить refresh token в отдельную cookie
         setRefreshCookie(response, loginResponse.getRefreshToken(), refreshTokenExpiration);
 
-        log.info("User {} successfully authenticated", loginRequest.getLogin());
+        log.info("Пользователь {} успешно авторизован", loginRequest.getLogin());
 
         return ResponseEntity.ok(loginResponse);
     }
@@ -75,7 +73,7 @@ public class AuthController {
     @Operation(summary = "Обновление токена",
             description = "Получение новой пары токенов по refresh token")
     @PostMapping("/refresh")
-    public ResponseEntity<LoginResponseDto> refreshToken(
+    public ResponseEntity<@NonNull LoginResponseDto> refreshToken(
             @Valid @RequestBody RefreshTokenRequestDto refreshRequest,
             HttpServletResponse response) {
 
@@ -97,21 +95,21 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Некорректные данные регистрации")
     })
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(
+    public ResponseEntity<@NonNull UserDto> register(
             @Valid @RequestBody RegistrationRequestDto registrationRequest) {
 
-        log.info("Registration attempt for user: {}", registrationRequest.getLogin());
+        log.info("Попытка регистрации для пользователя: {}", registrationRequest.getEmail());
 
         UserDto userDto = authenticationService.doRegister(registrationRequest);
 
-        log.info("User {} successfully registered", registrationRequest.getLogin());
+        log.info("Пользователь {} успешно зарегистрирован", registrationRequest.getEmail());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
     }
 
     @Operation(summary = "Проверка состояния аутентификации")
     @GetMapping("/state")
-    public ResponseEntity<StateDto> getAuthenticationState() {
+    public ResponseEntity<@NonNull StateDto> getAuthenticationState() {
         StateDto state = authenticationService.getAuthenticationState();
         return ResponseEntity.ok(state);
     }
@@ -119,11 +117,8 @@ public class AuthController {
     @Operation(summary = "Выход из системы",
             description = "Очищает аутентификационные cookies")
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletResponse response) {
-        // Очищаем access token cookie
+    public ResponseEntity<@NonNull Void> logout(HttpServletResponse response) {
         clearCookie(response, cookieName);
-
-        // Очищаем refresh token cookie
         clearCookie(response, cookieName + "_refresh");
 
         log.info("User logged out");
@@ -133,7 +128,7 @@ public class AuthController {
 
     @Operation(summary = "Получение информации о текущем пользователе")
     @GetMapping("/me")
-    public ResponseEntity<UserDto> getCurrentUser() {
+    public ResponseEntity<@NonNull UserDto> getCurrentUser() {
         try {
             UserDto userDto = authenticationService.getCurrentUserDto();
             return ResponseEntity.ok(userDto);

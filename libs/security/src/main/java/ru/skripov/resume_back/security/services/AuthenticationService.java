@@ -2,6 +2,7 @@ package ru.skripov.resume_back.security.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.skripov.resume_back.base_module.exception.common.CommonException;
 import ru.skripov.resume_back.security.dto.*;
 import ru.skripov.resume_back.security.dto.auth.StateDto;
 import ru.skripov.resume_back.security.dto.auth.login.LoginRequestDto;
@@ -52,13 +54,14 @@ public class AuthenticationService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // Получаем пользователя
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            User user = userService.findByLogin(userDetails.getUsername());
+            UserDetails userDetails = getUserDetails(authentication);
+
+            User user = userService.findByEmail(userDetails.getUsername());
 
             // Генерируем токены
             TokenService.TokenPair tokenPair = tokenService.generateTokenPair(user);
 
-            log.info("User {} successfully logged in", user.getLogin());
+            log.info("Пользователь с email {} успешно вошел в систему", user.getEmail());
 
             return LoginResponseDto.builder()
                     .accessToken(tokenPair.accessToken())
@@ -73,13 +76,35 @@ public class AuthenticationService {
         }
     }
 
+    private static UserDetails getUserDetails(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+
+        if (principal == null) {
+            throw new CommonException(
+                    "AUTHENTICATION_ERROR_TOKEN_INCORRECT",
+                    "Токен не содержит информации о пользователе",
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+
+        if (!(principal instanceof UserDetails)) {
+            throw new CommonException(
+                    "AUTHENTICATION_ERROR_TOKEN_INCORRECT",
+                    "Некорректный тип пользовательских данных в токене",
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return (UserDetails) principal;
+    }
+
     public LoginResponseDto refreshToken(String refreshToken) {
         if (!tokenService.isValidToken(refreshToken)) {
             throw new RuntimeException("Invalid refresh token");
         }
 
         String username = tokenService.getTokenInfo(refreshToken).get("username").toString();
-        User user = userService.findByLogin(username);
+        User user = userService.findByEmail(username);
 
         TokenService.TokenPair tokenPair = tokenService.generateTokenPair(user);
 
@@ -97,10 +122,12 @@ public class AuthenticationService {
 
             return Optional.ofNullable(user)
                     .map(userMapper::toDto)
-                    .orElseThrow(() -> new RuntimeException("Registration Error: Try Later"));
+                    .orElseThrow(() -> new CommonException("REGISTRATION_FAILED_TRY_LATTER", "Ошибка регистрации: повторите позже", HttpStatus.INTERNAL_SERVER_ERROR));
 
+        } catch (CommonException ex) {
+            throw ex;
         } catch (Exception e) {
-            throw new RuntimeException("Registration Error: " + e.getMessage());
+            throw new RuntimeException("Ошибка регистрации: " + e.getMessage());
         }
     }
 

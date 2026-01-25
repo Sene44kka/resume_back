@@ -11,9 +11,6 @@ public class UserDto implements Serializable {
     @Schema(name = "id", description = "Идентификатор")
     private Long id;
 
-    @Schema(name = "login", description = "Логин")
-    private String login;
-
     @Schema(name = "firstName", description = "Имя")
     private String firstName;
 

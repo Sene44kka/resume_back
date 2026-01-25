@@ -37,6 +37,8 @@ jwt:
   # Секрет в base64 (минимум 32 символа)
   secret: ${JWT_SECRET}
   expiration: 86400
+  access_token_expiration: 11
+  refresh_token_expiraton: 212
 
   # Время жизни в секундах
   access-token-expiration: 900        # 15 минут

@@ -10,6 +10,10 @@ import java.util.Map;
 
 @Service
 public class TokenService {
+    private static final String USERNAME = "username";
+    private static final String EXPIRES_AT = "expires_at";
+    private static final String VALID = "valid";
+
     private final JwtTokenUtil jwtTokenUtil;
 
     @Autowired
@@ -33,9 +37,9 @@ public class TokenService {
     
     public Map<String, Object> getTokenInfo(String token) {
         return Map.of(
-            "username", jwtTokenUtil.extractUsername(token),
-            "expiresAt", jwtTokenUtil.extractExpiration(token),
-            "valid", jwtTokenUtil.validateToken(token)
+                USERNAME, jwtTokenUtil.extractUsername(token),
+                EXPIRES_AT, jwtTokenUtil.extractExpiration(token),
+                VALID, jwtTokenUtil.validateToken(token)
         );
     }
 }

@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final UserDetailsService userDetailsService;
+
+    @Value("${jwt.prefix:Bearer }")
+    private String tokenPrefix;
 
     private JwtRequestFilter(JwtTokenUtil jwtTokenUtil,
                              UserDetailsService userDetailsService) {
@@ -43,7 +47,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String jwtToken = null;
 
         // JWT Token в формате "Bearer token"
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+        if (requestTokenHeader != null && requestTokenHeader.startsWith(tokenPrefix)) {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 username = jwtTokenUtil.extractUsername(jwtToken);

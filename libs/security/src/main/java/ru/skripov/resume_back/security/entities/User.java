@@ -2,6 +2,7 @@ package ru.skripov.resume_back.security.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -23,8 +24,8 @@ public class User implements UserDetails {
     @Column(name = "version")
     Long version;
 
-    @Column(name = "login", unique = true, nullable = false)
-    private String login;
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -38,9 +39,6 @@ public class User implements UserDetails {
     @Column(name = "middle_name", nullable = true)
     private String middleName;
 
-    @Column(name = "email", unique = true)
-    private String email;
-
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
@@ -51,13 +49,15 @@ public class User implements UserDetails {
     private LocalDateTime updatedAt;
 
     @Override
+    @NonNull
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
 
     @Override
+    @NonNull
     public String getUsername() {
-        return login;
+        return email;
     }
 
     @PrePersist

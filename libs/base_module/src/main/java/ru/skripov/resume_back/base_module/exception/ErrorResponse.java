@@ -1,13 +1,16 @@
 package ru.skripov.resume_back.base_module.exception;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
+import java.time.Instant;
+
+@Getter
+@Setter
 @Builder
 public class ErrorResponse {
-    private String error;
+    private String code;
     private String message;
     private int status;
-    private long timestamp;
+    @Builder.Default
+    private String timestamp = Instant.now().toString();
 }
