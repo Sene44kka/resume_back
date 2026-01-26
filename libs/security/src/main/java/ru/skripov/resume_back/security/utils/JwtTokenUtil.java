@@ -3,6 +3,7 @@ package ru.skripov.resume_back.security.utils;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -19,14 +20,13 @@ public class JwtTokenUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration}")
-    private Long expiration;
+    @Getter
+    @Value("${jwt.access-token-expiration:900}") //15 минут в секундах
+    private int accessTokenExpiration;
 
-    @Value("${jwt.expiration}")
-    private Long accessTokenExpiration;
-
-    @Value("${jwt.expiration}")
-    private Long refreshTokenExpiration;
+    @Getter
+    @Value("${jwt.refresh-token-expiration:604800}") //7 дней в секундах
+    private int refreshTokenExpiration;
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
@@ -36,24 +36,40 @@ public class JwtTokenUtil {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("authorities", userDetails.getAuthorities());
-        claims.put("userId", userDetails.getUsername()); // или ваш ID пользователя
+        claims.put("userId", userDetails.getUsername());
+        claims.put("token_type", "access");
 
         return Jwts.builder()
                 .claims(claims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiration * 1000))
+                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration * 1000L))
                 .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("token_type", "refresh");
+
         return Jwts.builder()
+                .claims(claims)
                 .subject(userDetails.getUsername())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiration * 1000 * 24 * 7)) // 7 дней
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + refreshTokenExpiration * 1000L))
                 .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
+    }
+
+    public String getTokenType(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("token_type", String.class);
+    }
+
+    public long getRemainingTimeSeconds(String token) {
+        Date expiration = extractExpiration(token);
+        long remainingMs = expiration.getTime() - System.currentTimeMillis();
+        return Math.max(0, remainingMs / 1000);
     }
 
     public boolean validateToken(String token) {
@@ -98,7 +114,4 @@ public class JwtTokenUtil {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public Map<String, Object> extractAllClaimsAsMap(String token) {
-        return extractAllClaims(token);
-    }
 }

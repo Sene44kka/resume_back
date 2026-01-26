@@ -31,12 +31,6 @@ import ru.skripov.resume_back.security.services.AuthenticationService;
 @Tag(name = "Authentication", description = "API для аутентификации и управления сессиями")
 public class AuthController {
 
-    @Value("${jwt.access-token-expiration:900}")  // 15 минут по умолчанию
-    private Integer accessTokenExpiration;
-
-    @Value("${jwt.refresh-token-expiration:604800}")  // 7 дней по умолчанию
-    private Integer refreshTokenExpiration;
-
     @Value("${jwt.cookie-name:jwt}")
     private String cookieName;
 
@@ -62,8 +56,8 @@ public class AuthController {
 
         LoginResponseDto loginResponse = authenticationService.login(loginRequest);
 
-        setAuthCookie(response, loginResponse.getAccessToken(), accessTokenExpiration);
-        setRefreshCookie(response, loginResponse.getRefreshToken(), refreshTokenExpiration);
+        setAuthCookie(response, loginResponse.getAccessToken(), loginResponse.getAccessTokenExpiration());
+        setRefreshCookie(response, loginResponse.getRefreshToken(), loginResponse.getRefreshTokenExpiration());
 
         log.info("Пользователь {} успешно авторизован", loginRequest.getLogin());
 
@@ -77,13 +71,13 @@ public class AuthController {
             @Valid @RequestBody RefreshTokenRequestDto refreshRequest,
             HttpServletResponse response) {
 
-        log.info("Token refresh request");
+        log.info("Запрос на обновление пары токенов");
 
         LoginResponseDto loginResponse = authenticationService.refreshToken(refreshRequest.getRefreshToken());
 
         // Обновляем cookies
-        setAuthCookie(response, loginResponse.getAccessToken(), accessTokenExpiration);
-        setRefreshCookie(response, loginResponse.getRefreshToken(), refreshTokenExpiration);
+        setAuthCookie(response, loginResponse.getAccessToken(), loginResponse.getAccessTokenExpiration());
+        setRefreshCookie(response, loginResponse.getRefreshToken(), loginResponse.getRefreshTokenExpiration());
 
         return ResponseEntity.ok(loginResponse);
     }
@@ -150,7 +144,7 @@ public class AuthController {
     private Cookie createCookie(String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
-        cookie.setSecure(cookieSecure);  // true для production (HTTPS)
+        cookie.setSecure(cookieSecure);
         cookie.setPath("/");
         cookie.setMaxAge(maxAge);
 

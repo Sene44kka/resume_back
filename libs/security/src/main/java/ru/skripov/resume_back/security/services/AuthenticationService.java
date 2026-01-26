@@ -1,7 +1,6 @@
 package ru.skripov.resume_back.security.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -66,7 +65,10 @@ public class AuthenticationService {
             return LoginResponseDto.builder()
                     .accessToken(tokenPair.accessToken())
                     .refreshToken(tokenPair.refreshToken())
-                    .expiresAt(tokenPair.expiresAt())
+                    .accessTokenExpiration(tokenPair.accessTokenExpiration())
+                    .refreshTokenExpiration(tokenPair.refreshTokenExpiration())
+                    .accessTokenExpiresAt(tokenPair.accessTokenExpiresAt())
+                    .refreshTokenExpiresAt(tokenPair.refreshTokenExpiresAt())
                     .user(userMapper.toDto(user))
                     .build();
 
@@ -111,7 +113,10 @@ public class AuthenticationService {
         return LoginResponseDto.builder()
                 .accessToken(tokenPair.accessToken())
                 .refreshToken(tokenPair.refreshToken())
-                .expiresAt(tokenPair.expiresAt())
+                .accessTokenExpiration(tokenPair.accessTokenExpiration())
+                .refreshTokenExpiration(tokenPair.refreshTokenExpiration())
+                .accessTokenExpiresAt(tokenPair.accessTokenExpiresAt())
+                .refreshTokenExpiresAt(tokenPair.refreshTokenExpiresAt())
                 .user(userMapper.toDto(user))
                 .build();
     }

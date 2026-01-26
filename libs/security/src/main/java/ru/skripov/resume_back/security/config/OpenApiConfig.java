@@ -10,12 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
-@io.swagger.v3.oas.annotations.security.SecurityScheme(
-        name = "Bearer Authentication",
-        type = SecuritySchemeType.HTTP,
-        bearerFormat = "JWT",
-        scheme = "bearer"
-)
 public class OpenApiConfig {
 
     @Bean
@@ -23,18 +17,41 @@ public class OpenApiConfig {
         final String securitySchemeName = "Bearer Authentication";
 
         return new OpenAPI()
-            .addSecurityItem(new SecurityRequirement()
-                .addList(securitySchemeName))
-            .components(new Components()
-                .addSecuritySchemes(securitySchemeName,
-                    new SecurityScheme()
-                        .name(securitySchemeName)
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme("bearer")
-                        .bearerFormat("JWT")))
-            .info(new Info()
-                    .title("Resume Bot API")
-                    .version("1.0")
-                    .description("API documentation for Resume application"));
+                .addSecurityItem(new SecurityRequirement()
+                        .addList(securitySchemeName))
+                .components(new Components()
+                        .addSecuritySchemes(securitySchemeName,
+                                new SecurityScheme()
+                                        .name(securitySchemeName)
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")
+                                        .description("Для получения токена используйте эндпоинты аутентификации")))
+                .info(new Info()
+                        .title("Resume Bot API")
+                        .version("1.0")
+                        .description("""
+                    ## API для управления резюме
+                    
+                    ### 🔐 **Аутентификация**
+                    
+                    **Как получить токен:**
+                    1. Используйте `POST /auth/register` для регистрации нового пользователя
+                    2. Или `POST /auth/login` для входа существующего пользователя
+                    3. Из ответа скопируйте `accessToken`
+                    4. Нажмите кнопку **Authorize** и введите: `ваш_токен`
+                    
+                    **Эндпоинты аутентификации:**
+                    - `POST /auth/register` - регистрация
+                    - `POST /auth/login` - вход
+                    - `POST /auth/refresh` - обновление токена
+                    - `POST /auth/logout` - выход
+                    - `GET /auth/state` - проверка состояния
+                    - `GET /auth/me` - информация о текущем пользователе
+                    
+                    ---
+                    
+                    **После авторизации** все защищенные эндпоинты будут доступны.
+                    """));
     }
 }

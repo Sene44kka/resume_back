@@ -20,26 +20,49 @@ public class TokenService {
     private TokenService(JwtTokenUtil jwtTokenUtil) {
         this.jwtTokenUtil = jwtTokenUtil;
     }
-    
+
     public TokenPair generateTokenPair(User user) {
         String accessToken = jwtTokenUtil.generateToken(user);
         String refreshToken = jwtTokenUtil.generateRefreshToken(user);
-        
-        return new TokenPair(accessToken, refreshToken, 
-            jwtTokenUtil.extractExpiration(accessToken));
+
+        return new TokenPair(
+                accessToken,
+                refreshToken,
+                jwtTokenUtil.getAccessTokenExpiration(),
+                jwtTokenUtil.getRefreshTokenExpiration(),
+                jwtTokenUtil.extractExpiration(accessToken),
+                jwtTokenUtil.extractExpiration(refreshToken)
+        );
     }
-    
-    public record TokenPair(String accessToken, String refreshToken, Date expiresAt) {}
-    
+
+    public record TokenPair(
+            String accessToken,
+            String refreshToken,
+            int accessTokenExpiration,
+            int refreshTokenExpiration,
+            Date accessTokenExpiresAt,
+            Date refreshTokenExpiresAt
+    ) {
+        public boolean isAccessTokenExpired() {
+            return new Date().after(accessTokenExpiresAt);
+        }
+
+        public boolean isRefreshTokenExpired() {
+            return new Date().after(refreshTokenExpiresAt);
+        }
+    }
+
     public boolean isValidToken(String token) {
         return jwtTokenUtil.validateToken(token);
     }
-    
+
     public Map<String, Object> getTokenInfo(String token) {
         return Map.of(
                 USERNAME, jwtTokenUtil.extractUsername(token),
                 EXPIRES_AT, jwtTokenUtil.extractExpiration(token),
-                VALID, jwtTokenUtil.validateToken(token)
+                VALID, jwtTokenUtil.validateToken(token),
+                "token_type", jwtTokenUtil.getTokenType(token),
+                "remaining_seconds", jwtTokenUtil.getRemainingTimeSeconds(token)
         );
     }
 }
