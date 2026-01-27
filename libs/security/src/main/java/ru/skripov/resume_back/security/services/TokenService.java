@@ -13,6 +13,8 @@ public class TokenService {
     private static final String USERNAME = "username";
     private static final String EXPIRES_AT = "expires_at";
     private static final String VALID = "valid";
+    private static final String TOKEN_TYPE = "token_type";
+    private static final String REMAINING_SECONDS = "remaining_seconds";
 
     private final JwtTokenUtil jwtTokenUtil;
 
@@ -61,8 +63,8 @@ public class TokenService {
                 USERNAME, jwtTokenUtil.extractUsername(token),
                 EXPIRES_AT, jwtTokenUtil.extractExpiration(token),
                 VALID, jwtTokenUtil.validateToken(token),
-                "token_type", jwtTokenUtil.getTokenType(token),
-                "remaining_seconds", jwtTokenUtil.getRemainingTimeSeconds(token)
+                TOKEN_TYPE, jwtTokenUtil.getTokenType(token),
+                REMAINING_SECONDS, jwtTokenUtil.getRemainingTimeSeconds(token)
         );
     }
 }
