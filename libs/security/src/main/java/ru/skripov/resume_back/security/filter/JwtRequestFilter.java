@@ -76,12 +76,4 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         chain.doFilter(request, response);
     }
-
-    @Override
-    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
-        String path = request.getServletPath();
-        return path.startsWith("/auth/") ||
-                path.startsWith("/v3/api-docs") ||
-                path.startsWith("/swagger-ui");
-    }
 }

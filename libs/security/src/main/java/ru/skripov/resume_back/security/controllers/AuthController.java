@@ -22,6 +22,8 @@ import ru.skripov.resume_back.security.dto.auth.login.LoginRequestDto;
 import ru.skripov.resume_back.security.dto.auth.login.LoginResponseDto;
 import ru.skripov.resume_back.security.dto.auth.login.RefreshTokenRequestDto;
 import ru.skripov.resume_back.security.dto.auth.registration.RegistrationRequestDto;
+import ru.skripov.resume_back.security.entities.User;
+import ru.skripov.resume_back.security.mappers.UserMapper;
 import ru.skripov.resume_back.security.services.AuthenticationService;
 
 @Slf4j
@@ -38,6 +40,7 @@ public class AuthController {
     private boolean cookieSecure;
 
     private final AuthenticationService authenticationService;
+    private final UserMapper userMapper;
 
     @Operation(summary = "Аутентификация пользователя",
             description = "Вход в систему с получением access и refresh токенов")
@@ -124,7 +127,9 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<@NonNull UserDto> getCurrentUser() {
         try {
-            UserDto userDto = authenticationService.getCurrentUserDto();
+            User currentUser = authenticationService.getCurrentUser();
+            UserDto userDto = userMapper.toDto(currentUser);
+
             return ResponseEntity.ok(userDto);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

@@ -157,10 +157,4 @@ public class AuthenticationService {
         }
         throw new RuntimeException("Пользователь не авторизован");
     }
-
-    public UserDto getCurrentUserDto() {
-        User currentUser = getCurrentUser();
-
-        return userMapper.toDto(currentUser);
-    }
 }
